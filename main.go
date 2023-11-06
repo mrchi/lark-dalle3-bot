@@ -9,12 +9,12 @@ import (
 	"os"
 	"regexp"
 
-	lark "github.com/larksuite/oapi-sdk-go/v3"
 	larkcore "github.com/larksuite/oapi-sdk-go/v3/core"
 	"github.com/larksuite/oapi-sdk-go/v3/core/httpserverext"
 	larkevent "github.com/larksuite/oapi-sdk-go/v3/event"
 	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher"
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
+	larkee "github.com/mrchi/lark-dalle3-bot/pkg/larkee"
 )
 
 const (
@@ -28,15 +28,11 @@ const (
 )
 
 var (
-	larkClient             *lark.Client
+	larkeeClient           *larkee.LarkClient
 	larkEventDispatcher    *dispatcher.EventDispatcher
 	regexRemoveAt          = regexp.MustCompile(`@_all|@_user_\d+\s*`)
 	regexExtractCmdAndBody = regexp.MustCompile(`\s*(/balance|/prompt|/help)\s*(.*)`)
 )
-
-type TextMessage struct {
-	Text string `json:"text"`
-}
 
 func init() {
 	verificationToken := os.Getenv("VERIFICATION_TOKEN")
@@ -44,7 +40,7 @@ func init() {
 	appId := os.Getenv("APP_ID")
 	appSecret := os.Getenv("APP_SECRET")
 
-	larkClient = lark.NewClient(appId, appSecret, lark.WithLogLevel(LOG_LEVEL))
+	larkeeClient = larkee.NewLarkClient(appId, appSecret, LOG_LEVEL)
 	larkEventDispatcher = dispatcher.NewEventDispatcher(verificationToken, eventEncryptKey)
 }
 
@@ -55,7 +51,7 @@ func messageHandler(ctx context.Context, event *larkim.P2MessageReceiveV1) error
 		return nil
 	}
 	// 获取文本消息内容
-	var msgContent TextMessage
+	var msgContent larkee.LarkTextMessage
 	err := json.Unmarshal([]byte(*event.Event.Message.Content), &msgContent)
 	if err != nil {
 		return err
@@ -69,8 +65,9 @@ func messageHandler(ctx context.Context, event *larkim.P2MessageReceiveV1) error
 	switch matches[1] {
 	case "/balance":
 		fmt.Println("Balance")
+		larkeeClient.ReplyTextMessage("world", *event.Event.Sender.SenderId.OpenId, event.TenantKey())
 	case "/prompt":
-		fmt.Println("Prompt", matches[2])
+		fmt.Println("Prompt")
 	}
 	return nil
 }
