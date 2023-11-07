@@ -1,10 +1,9 @@
 package larkee
 
 import (
+	"bytes"
 	"context"
 	"fmt"
-	"io"
-	"sync"
 
 	lark "github.com/larksuite/oapi-sdk-go/v3"
 	larkcore "github.com/larksuite/oapi-sdk-go/v3/core"
@@ -24,23 +23,18 @@ type LarkClient struct {
 	client *lark.Client
 }
 
-type ImageUploadResult struct {
-	imageKey string
-	errMsg   string
-}
-
-func (lc *LarkClient) ReplyTextMessage(content string, receiveOpenId string, tenantKey string) error {
+func (lc *LarkClient) ReplyTextMessage(content string, messageId string, tenantKey string) error {
 	msgContent, err := NewLarkTextMessageContent(content)
 	if err != nil {
 		return err
 	}
-	msgBody := larkim.NewCreateMessageReqBodyBuilder().
-		MsgType(larkim.MsgTypeText).Content(msgContent).ReceiveId(receiveOpenId).
+	msgBody := larkim.NewReplyMessageReqBodyBuilder().
+		MsgType(larkim.MsgTypeText).Content(msgContent).
 		Build()
-	req := larkim.NewCreateMessageReqBuilder().
-		ReceiveIdType(larkim.ReceiveIdTypeOpenId).Body(msgBody).
+	req := larkim.NewReplyMessageReqBuilder().
+		MessageId(messageId).Body(msgBody).
 		Build()
-	resp, err := lc.client.Im.Message.Create(context.Background(), req, larkcore.WithTenantKey(tenantKey))
+	resp, err := lc.client.Im.Message.Reply(context.Background(), req, larkcore.WithTenantKey(tenantKey))
 	if err != nil {
 		return err
 	} else if !resp.Success() {
@@ -50,44 +44,32 @@ func (lc *LarkClient) ReplyTextMessage(content string, receiveOpenId string, ten
 	}
 }
 
-func (lc *LarkClient) UploadImages(images []io.Reader) []ImageUploadResult {
-	result := make([]ImageUploadResult, len(images))
-
-	var wg sync.WaitGroup
-	wg.Add(len(images))
-	for idx, image := range images {
-		go func(idx int, image io.Reader) {
-			defer wg.Done()
-			reqBody := larkim.NewCreateImageReqBodyBuilder().ImageType(larkim.ImageTypeMessage).Image(image).Build()
-			req := larkim.NewCreateImageReqBuilder().Body(reqBody).Build()
-			resp, err := lc.client.Im.Image.Create(context.Background(), req)
-			if err != nil {
-				result[idx].errMsg = err.Error()
-			} else if !resp.Success() {
-				result[idx].errMsg = LarkAPIError{Code: resp.Code, Msg: resp.Msg}.Error()
-			} else {
-				result[idx].imageKey = *resp.Data.ImageKey
-			}
-		}(idx, image)
+func (lc *LarkClient) UploadImage(image *[]byte) (string, error) {
+	reader := bytes.NewReader(*image)
+	reqBody := larkim.NewCreateImageReqBodyBuilder().ImageType(larkim.ImageTypeMessage).Image(reader).Build()
+	req := larkim.NewCreateImageReqBuilder().Body(reqBody).Build()
+	resp, err := lc.client.Im.Image.Create(context.Background(), req)
+	if err != nil {
+		return "", err
+	} else if !resp.Success() {
+		return "", LarkAPIError{Code: resp.Code, Msg: resp.Msg}
+	} else {
+		return *resp.Data.ImageKey, nil
 	}
-	wg.Wait()
-	return result
 }
 
-func (lc *LarkClient) ReplyImagesInteractiveMessage(images []ImageUploadResult, content string, receiveOpenId string, tenantKey string) error {
-	msgContent, err := NewLarkInteractiveMessageContent(images, content)
+func (lc *LarkClient) ReplyImagesInteractiveMessage(imageKeys []string, content string, messageId string, tenantKey string) error {
+	msgContent, err := NewLarkInteractiveMessageContent(imageKeys, content)
 	if err != nil {
 		return err
 	}
-	msgBody := larkim.NewCreateMessageReqBodyBuilder().
-		MsgType(larkim.MsgTypeInteractive).
-		Content(string(msgContent)).
-		ReceiveId(receiveOpenId).Build()
-	req := larkim.NewCreateMessageReqBuilder().
-		ReceiveIdType(larkim.ReceiveIdTypeOpenId).
-		Body(msgBody).
+	msgBody := larkim.NewReplyMessageReqBodyBuilder().
+		MsgType(larkim.MsgTypeInteractive).Content(msgContent).
 		Build()
-	resp, err := lc.client.Im.Message.Create(context.Background(), req, larkcore.WithTenantKey(tenantKey))
+	req := larkim.NewReplyMessageReqBuilder().
+		MessageId(messageId).Body(msgBody).
+		Build()
+	resp, err := lc.client.Im.Message.Reply(context.Background(), req, larkcore.WithTenantKey(tenantKey))
 	if err != nil {
 		return err
 	} else if !resp.Success() {

@@ -45,13 +45,13 @@ func NewLarkTextMessageContent(text string) (string, error) {
 	return string(msgContent), nil
 }
 
-func NewLarkInteractiveMessageContent(images []ImageUploadResult, text string) (string, error) {
+func NewLarkInteractiveMessageContent(imageKeys []string, text string) (string, error) {
 	var columns []LarkInteractiveMsgColumn
-	for _, image := range images {
+	for _, imageKey := range imageKeys {
 		element := LarkInteractiveMsgImg{
 			Tag:     "img",
-			ImgKey:  image.imageKey,
-			Alt:     LarkInteractiveMsgText{Tag: "plain_text", Content: image.errMsg},
+			ImgKey:  imageKey,
+			Alt:     LarkInteractiveMsgText{Tag: "plain_text", Content: ""},
 			Mode:    "fit_horizontal",
 			Preview: true,
 		}
