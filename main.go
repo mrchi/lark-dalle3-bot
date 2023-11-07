@@ -165,7 +165,7 @@ func commandPromptHandler(prompt string, messageId, tanantKey string) {
 func main() {
 	larkEventDispatcher.OnP2MessageReceiveV1(messageHandler)
 
-	http.HandleFunc("/", httpserverext.NewEventHandlerFunc(larkEventDispatcher, larkevent.WithLogLevel(LOG_LEVEL)))
+	http.HandleFunc("/dalle3", httpserverext.NewEventHandlerFunc(larkEventDispatcher, larkevent.WithLogLevel(LOG_LEVEL)))
 
 	log.Printf("start server at: %s\n", LISTEN_ADDR)
 	err := http.ListenAndServe(LISTEN_ADDR, nil)
