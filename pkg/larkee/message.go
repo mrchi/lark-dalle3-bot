@@ -1,6 +1,8 @@
 package larkee
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 type LarkTextMessage struct {
 	Text string `json:"text"`
@@ -45,31 +47,65 @@ func NewLarkTextMessageContent(text string) (string, error) {
 	return string(msgContent), nil
 }
 
-func NewLarkInteractiveMessageContent(imageKeys []string, text string) (string, error) {
-	var columns []LarkInteractiveMsgColumn
-	for _, imageKey := range imageKeys {
-		element := LarkInteractiveMsgImg{
-			Tag:     "img",
-			ImgKey:  imageKey,
-			Alt:     LarkInteractiveMsgText{Tag: "plain_text", Content: ""},
-			Mode:    "fit_horizontal",
-			Preview: true,
-		}
-		columns = append(
-			columns,
+func NewLarkImagesInteractiveContent(prompt string, imageKeys []string) (string, error) {
+	textModule := LarkInteractiveMsgText{Tag: "markdown", Content: prompt}
+	msg := LarkInteractiveMessage{Elements: []any{textModule}}
+
+	// 每列展示 2 个图片
+	for i := 0; i < len(imageKeys); i += 2 {
+		columnSet := LarkInteractiveMsgColumnSet{Tag: "column_set"}
+		columnSet.Columns = append(
+			columnSet.Columns,
 			LarkInteractiveMsgColumn{
 				Tag:           "column",
 				Width:         "weighted",
 				Weight:        1,
 				VerticalAlign: "top",
-				Elements:      []LarkInteractiveMsgImg{element},
+				Elements: []LarkInteractiveMsgImg{
+					{
+						Tag:     "img",
+						ImgKey:  imageKeys[i],
+						Alt:     LarkInteractiveMsgText{Tag: "plain_text", Content: ""},
+						Mode:    "fit_horizontal",
+						Preview: true,
+					},
+				},
 			},
 		)
+		if i+1 < len(imageKeys) {
+			columnSet.Columns = append(
+				columnSet.Columns,
+				LarkInteractiveMsgColumn{
+					Tag:           "column",
+					Width:         "weighted",
+					Weight:        1,
+					VerticalAlign: "top",
+					Elements: []LarkInteractiveMsgImg{
+						{
+							Tag:     "img",
+							ImgKey:  imageKeys[i+1],
+							Alt:     LarkInteractiveMsgText{Tag: "plain_text", Content: ""},
+							Mode:    "fit_horizontal",
+							Preview: true,
+						},
+					},
+				},
+			)
+		}
+		msg.Elements = append(msg.Elements, columnSet)
 	}
-	imgModule := LarkInteractiveMsgColumnSet{Tag: "column_set", Columns: columns}
-	textModule := LarkInteractiveMsgText{Tag: "markdown", Content: text}
 
-	msg := LarkInteractiveMessage{Elements: []any{textModule, imgModule}}
+	msgContent, err := json.Marshal(msg)
+	if err != nil {
+		return "", err
+	}
+	return string(msgContent), nil
+}
+
+func NewLarkMarkdownContent(content string) (string, error) {
+	textModule := LarkInteractiveMsgText{Tag: "markdown", Content: content}
+	msg := LarkInteractiveMessage{Elements: []any{textModule}}
+
 	msgContent, err := json.Marshal(msg)
 	if err != nil {
 		return "", err

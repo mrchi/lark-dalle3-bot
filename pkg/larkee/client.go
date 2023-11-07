@@ -58,8 +58,29 @@ func (lc *LarkClient) UploadImage(image *[]byte) (string, error) {
 	}
 }
 
-func (lc *LarkClient) ReplyImagesInteractiveMessage(imageKeys []string, content string, messageId string, tenantKey string) error {
-	msgContent, err := NewLarkInteractiveMessageContent(imageKeys, content)
+func (lc *LarkClient) ReplyImagesInteractiveMessage(prompt string, imageKeys []string, messageId string, tenantKey string) error {
+	msgContent, err := NewLarkImagesInteractiveContent(prompt, imageKeys)
+	if err != nil {
+		return err
+	}
+	msgBody := larkim.NewReplyMessageReqBodyBuilder().
+		MsgType(larkim.MsgTypeInteractive).Content(msgContent).
+		Build()
+	req := larkim.NewReplyMessageReqBuilder().
+		MessageId(messageId).Body(msgBody).
+		Build()
+	resp, err := lc.client.Im.Message.Reply(context.Background(), req, larkcore.WithTenantKey(tenantKey))
+	if err != nil {
+		return err
+	} else if !resp.Success() {
+		return LarkAPIError{Code: resp.Code, Msg: resp.Msg}
+	} else {
+		return nil
+	}
+}
+
+func (lc *LarkClient) ReplyMarkdownMessage(content string, messageId string, tenantKey string) error {
+	msgContent, err := NewLarkMarkdownContent(content)
 	if err != nil {
 		return err
 	}
