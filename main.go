@@ -26,8 +26,8 @@ var (
 	bingClient             *bingdalle3.BingDalle3
 	larkeeClient           *larkee.LarkClient
 	larkEventDispatcher    *dispatcher.EventDispatcher
-	regexRemoveAt          = regexp.MustCompile(`@_all|@_user_\d+\s*`)
-	regexExtractCmdAndBody = regexp.MustCompile(`\s*(/balance|/prompt|/help)\s*(.*)`)
+	regexRemoveAt          = regexp.MustCompile(`\s*@_all|@_user_\d+\s*`)
+	regexExtractCmdAndBody = regexp.MustCompile(`(?s)^\s*(/balance|/prompt|/help)\s*?(.*)$`)
 	helpMessage            = []string{
 		"欢迎使用 DALL·E 3 Bot。目前支持以下命令：",
 		"",
@@ -121,6 +121,7 @@ func commandBalanceHandler(messageId, tanantKey string) {
 }
 
 func commandPromptHandler(prompt string, messageId, tanantKey string) {
+	prompt = strings.TrimSpace(prompt)
 	// 判断 prompt 不为空
 	if prompt == "" {
 		larkeeClient.ReplyTextMessage("[Error]Prompt is empty", messageId, tanantKey)
