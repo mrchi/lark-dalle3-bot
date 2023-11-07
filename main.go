@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -20,12 +21,8 @@ import (
 	larkee "github.com/mrchi/lark-dalle3-bot/pkg/larkee"
 )
 
-const (
-	LISTEN_ADDR = "localhost:8000"
-	LOG_LEVEL   = larkcore.LogLevelDebug
-)
-
 var (
+	config                 BotConfig
 	bingClient             *bingdalle3.BingDalle3
 	larkeeClient           *larkee.LarkClient
 	larkEventDispatcher    *dispatcher.EventDispatcher
@@ -40,16 +37,35 @@ var (
 	}
 )
 
-func init() {
-	bingCookie := os.Getenv("BING_COOKIE")
-	verificationToken := os.Getenv("VERIFICATION_TOKEN")
-	eventEncryptKey := os.Getenv("ENCRYPT_KEY")
-	appId := os.Getenv("APP_ID")
-	appSecret := os.Getenv("APP_SECRET")
+type BotConfig struct {
+	BingCookie            string `json:"bing_cookie"`
+	LarkVerificationToken string `json:"lark_verification_token"`
+	LarkEventEncryptKey   string `json:"lark_event_encrypt_key"`
+	LarkAppID             string `json:"lark_app_id"`
+	LarkAppSecret         string `json:"lark_app_secret"`
+	LarkLogLevel          int    `json:"lark_log_level"`
+	LarkEventServerAddr   string `json:"lark_event_server_addr"`
+}
 
-	bingClient = bingdalle3.NewBingDalle3(bingCookie)
-	larkeeClient = larkee.NewLarkClient(appId, appSecret, LOG_LEVEL)
-	larkEventDispatcher = dispatcher.NewEventDispatcher(verificationToken, eventEncryptKey)
+func init() {
+	file, err := os.Open("config.json")
+	if err != nil {
+		log.Fatalln("Read config failed.", err)
+	}
+	defer file.Close()
+
+	content, err := io.ReadAll(file)
+	if err != nil {
+		log.Fatalln("Read config failed.", err)
+	}
+
+	if err := json.Unmarshal(content, &config); err != nil {
+		log.Fatalln("Wrong format in config file.", err)
+	}
+
+	bingClient = bingdalle3.NewBingDalle3(config.BingCookie)
+	larkeeClient = larkee.NewLarkClient(config.LarkAppID, config.LarkAppSecret, larkcore.LogLevel(config.LarkLogLevel))
+	larkEventDispatcher = dispatcher.NewEventDispatcher(config.LarkVerificationToken, config.LarkEventEncryptKey)
 }
 
 func messageHandler(ctx context.Context, event *larkim.P2MessageReceiveV1) error {
@@ -165,10 +181,16 @@ func commandPromptHandler(prompt string, messageId, tanantKey string) {
 func main() {
 	larkEventDispatcher.OnP2MessageReceiveV1(messageHandler)
 
-	http.HandleFunc("/dalle3", httpserverext.NewEventHandlerFunc(larkEventDispatcher, larkevent.WithLogLevel(LOG_LEVEL)))
+	http.HandleFunc(
+		"/dalle3",
+		httpserverext.NewEventHandlerFunc(
+			larkEventDispatcher,
+			larkevent.WithLogLevel(larkcore.LogLevel(config.LarkLogLevel)),
+		),
+	)
 
-	log.Printf("start server at: %s\n", LISTEN_ADDR)
-	err := http.ListenAndServe(LISTEN_ADDR, nil)
+	log.Printf("start server at: %s\n", config.LarkEventServerAddr)
+	err := http.ListenAndServe(config.LarkEventServerAddr, nil)
 	if err != nil {
 		panic(err)
 	}
