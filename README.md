@@ -48,6 +48,8 @@ This step ensures that the server is reachable when setting up event subscriptio
         - `Obtain group messages mentioning the bot`
 5. Publish your app through the `Version Management & Release` tab.
 
+**For Lark users, please visit [Lark Open Platform](https://open.larksuite.com/app).**
+
 ### Bot Configuration and Restart
 
 From the Feishu/Lark Open Platform:
@@ -57,9 +59,15 @@ From the Feishu/Lark Open Platform:
 From Bing:
 1. Follow the instructions in the README at [yihong0618/BingImageCreator](https://github.com/yihong0618/BingImageCreator) to obtain your Bing cookie.
 
+**Only for Lark users, please set `is_feishu` to `false` in config file.**
+
 Update your `config.json` with these credentials, then rerun your bot.
 
 Enjoy the bot's functionality.
+
+## Related works
+
+- [mrchi/bing\-dalle3: Golang implementation of yihong0618/BingImageCreator](https://github.com/mrchi/bing-dalle3)
 
 ## Acknowledgments
 
