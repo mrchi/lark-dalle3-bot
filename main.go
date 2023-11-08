@@ -45,6 +45,7 @@ type BotConfig struct {
 	LarkAppSecret         string `json:"lark_app_secret"`
 	LarkLogLevel          int    `json:"lark_log_level"`
 	LarkEventServerAddr   string `json:"lark_event_server_addr"`
+	IsFeishu              bool   `json:"is_feishu"`
 }
 
 func init() {
@@ -64,7 +65,11 @@ func init() {
 	}
 
 	bingClient = bingdalle3.NewBingDalle3(config.BingCookie)
-	larkeeClient = larkee.NewLarkClient(config.LarkAppID, config.LarkAppSecret, larkcore.LogLevel(config.LarkLogLevel))
+	if config.IsFeishu {
+		larkeeClient = larkee.NewFeishuClient(config.LarkAppID, config.LarkAppSecret, larkcore.LogLevel(config.LarkLogLevel))
+	} else {
+		larkeeClient = larkee.NewLarkClient(config.LarkAppID, config.LarkAppSecret, larkcore.LogLevel(config.LarkLogLevel))
+	}
 	larkEventDispatcher = dispatcher.NewEventDispatcher(config.LarkVerificationToken, config.LarkEventEncryptKey)
 }
 

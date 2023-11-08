@@ -101,6 +101,11 @@ func (lc *LarkClient) ReplyMarkdownMessage(content string, messageId string, ten
 }
 
 func NewLarkClient(appId string, appSecret string, logLevel larkcore.LogLevel) *LarkClient {
-	client := lark.NewClient(appId, appSecret, lark.WithLogLevel(logLevel))
+	client := lark.NewClient(appId, appSecret, lark.WithLogLevel(logLevel), lark.WithOpenBaseUrl(lark.LarkBaseUrl))
+	return &LarkClient{client: client}
+}
+
+func NewFeishuClient(appId string, appSecret string, logLevel larkcore.LogLevel) *LarkClient {
+	client := lark.NewClient(appId, appSecret, lark.WithLogLevel(logLevel), lark.WithOpenBaseUrl(lark.FeishuBaseUrl))
 	return &LarkClient{client: client}
 }

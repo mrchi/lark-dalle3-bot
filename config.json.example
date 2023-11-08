@@ -5,5 +5,6 @@
     "lark_app_id": "",
     "lark_app_secret": "",
     "lark_log_level": 2,
-    "lark_event_server_addr": "localhost:8000"
+    "lark_event_server_addr": "localhost:8000",
+    "is_feishu": true
 }
