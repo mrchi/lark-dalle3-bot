@@ -65,3 +65,9 @@ Enjoy the bot's functionality.
 
 - [yihong0618/tg_bing_dalle: A Telegram bot for DALL-E 3 with Bing](https://github.com/yihong0618/tg_bing_dalle/)
 - [yihong0618/BingImageCreator: High-quality image generation by Microsoft's reverse-engineered API.](https://github.com/yihong0618/BingImageCreator)
+
+## Disclaimer
+
+> Translated by GPT4.
+
+If you use this project for services open to the public in China, you are required to comply with the relevant laws and regulations, and you may need to obtain the necessary permits or complete relevant procedures. This project is only for technical communication and does not assume responsibility for any legal risks that may arise during your use.
