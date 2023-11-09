@@ -18,8 +18,10 @@ var commandBalance = dispatcher.Command{
 		var replyMsg string
 		if err != nil {
 			replyMsg = fmt.Sprintf("[Error]%s", err.Error())
+		} else if balance == 0 {
+			replyMsg = "Tokens are exhausted, generation will take longer and may fail"
 		} else {
-			replyMsg = fmt.Sprintf("Tokens left %d.", balance)
+			replyMsg = fmt.Sprintf("There are %d tokens left", balance)
 		}
 		larkeeClient.ReplyTextMessage(replyMsg, messageId, tanantKey)
 	},
@@ -43,15 +45,15 @@ var commandPrompt = dispatcher.Command{
 		}
 
 		// 返回一些提示信息
-		messages := []string{"Creating now...", "WritingID is " + writingId}
+		messages := []string{"Request submitted\nWriting ID is " + writingId}
 		balance, err := bingClient.GetTokenBalance()
 		var balanceMsg string
 		if err != nil {
-			balanceMsg = fmt.Sprintf("Tokens left invalid, error: %s.", err.Error())
+			balanceMsg = fmt.Sprintf("[Error]Failed get token balance, %s", err.Error())
 		} else if balance == 0 {
-			balanceMsg = "Tokens run out, image generation may take longer."
+			balanceMsg = "Tokens are exhausted, generation will take longer and may fail"
 		} else {
-			balanceMsg = fmt.Sprintf("Tokens left %d.", balance)
+			balanceMsg = fmt.Sprintf("There are %d tokens left", balance)
 		}
 		messages = append(messages, balanceMsg)
 		larkeeClient.ReplyTextMessage(strings.Join(messages, "\n"), messageId, tanantKey)
