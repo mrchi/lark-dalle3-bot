@@ -2,13 +2,12 @@
 
 This bot integrates with Feishu/Lark and generates images utilizing the [Image Creator from Microsoft Bing](https://www.bing.com/images/create) service.
 
-![Alt text](doc/demo.jpg)
+![Alt text](doc/demo.png)
 
 ## Usage
 
-- **/balance**: Query token balance.
-- **/prompt \<Your prompt\>**: Generate images.
-- **/help**: Display help information.
+- **/balance** Get tokens balance of Bing cookie
+- **/prompt \<Your prompt\>** Create image with prompt
 
 ## Deployment
 
@@ -61,9 +60,7 @@ From Bing:
 
 **Only for Lark users, please set `is_feishu` to `false` in config file.**
 
-Update your `config.json` with these credentials, then rerun your bot.
-
-Enjoy the bot's functionality.
+Update your `config.json` with these credentials, then rerun your bot and enjoy the magic.
 
 ## Related works
 
