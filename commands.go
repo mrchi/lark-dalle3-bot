@@ -88,6 +88,6 @@ var commandPrompt = dispatcher.Command{
 }
 
 func commandHelpExecute(helpMsgs []string, larkeeClient *larkee.LarkClient, messageId string, tanantKey string) {
-	msg := "Welcome. Supported commands:\n\n" + strings.Join(helpMsgs, "\n")
+	msg := "Welcome to use DALL·E 3 bot. We now support the following commands:\n\n" + strings.Join(helpMsgs, "\n")
 	larkeeClient.ReplyMarkdownMessage(msg, messageId, tanantKey)
 }
