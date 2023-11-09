@@ -1,4 +1,4 @@
-package main
+package botconfig
 
 import (
 	"encoding/json"
@@ -17,7 +17,7 @@ type BotConfig struct {
 	IsFeishu              bool   `json:"is_feishu"`
 }
 
-func readConfigFromFile(filePath string) (*BotConfig, error) {
+func ReadConfigFromFile(filePath string) (*BotConfig, error) {
 	var config BotConfig
 	file, err := os.Open(filePath)
 	if err != nil {

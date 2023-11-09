@@ -13,18 +13,19 @@ import (
 	"github.com/larksuite/oapi-sdk-go/v3/event/dispatcher"
 	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 	bingdalle3 "github.com/mrchi/bing-dalle3"
-	cmd_dispatcher "github.com/mrchi/lark-dalle3-bot/pkg/dispatcher"
+	"github.com/mrchi/lark-dalle3-bot/internal/botconfig"
+	cmddispatcher "github.com/mrchi/lark-dalle3-bot/pkg/dispatcher"
 	larkee "github.com/mrchi/lark-dalle3-bot/pkg/larkee"
 )
 
 var (
-	config     *BotConfig
+	config     *botconfig.BotConfig
 	bingClient *bingdalle3.BingDalle3
 )
 
 func init() {
 	var err error
-	config, err = readConfigFromFile("./config.json")
+	config, err = botconfig.ReadConfigFromFile("./config.json")
 	if err != nil {
 		panic(err)
 	}
@@ -38,7 +39,7 @@ func main() {
 	} else {
 		larkeeClient = larkee.NewLarkClient(config.LarkAppID, config.LarkAppSecret, larkcore.LogLevel(config.LarkLogLevel))
 	}
-	commandDispatcher := cmd_dispatcher.NewCommandDispatcher(larkeeClient, commandHelpExecute, commandBalance, commandPrompt)
+	commandDispatcher := cmddispatcher.NewCommandDispatcher(larkeeClient, commandHelpExecute, commandBalance, commandPrompt)
 
 	larkEventDispatcher := dispatcher.NewEventDispatcher(config.LarkVerificationToken, config.LarkEventEncryptKey)
 	larkEventDispatcher.OnP2MessageReceiveV1(func(ctx context.Context, event *larkim.P2MessageReceiveV1) error {
