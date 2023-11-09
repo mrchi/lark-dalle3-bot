@@ -21,8 +21,12 @@ type CommandDispatcher struct {
 	commandHelpExecute func(helpMsgs []string, larkeeClient *larkee.LarkClient, messageId string, tanantKey string)
 }
 
-func NewCommandDispatcher(larkeeClient *larkee.LarkClient, commands ...Command) *CommandDispatcher {
-	dispatcher := CommandDispatcher{larkeeClient: larkeeClient}
+func NewCommandDispatcher(
+	larkeeClient *larkee.LarkClient,
+	commandHelpExecute func(helpMsgs []string, larkeeClient *larkee.LarkClient, messageId string, tanantKey string),
+	commands ...Command,
+) *CommandDispatcher {
+	dispatcher := CommandDispatcher{larkeeClient: larkeeClient, commandHelpExecute: commandHelpExecute}
 	for _, command := range commands {
 		dispatcher.prefixes = append(dispatcher.prefixes, command.Prefix)
 		dispatcher.helpMsgs = append(dispatcher.helpMsgs, command.HelpMsg)
