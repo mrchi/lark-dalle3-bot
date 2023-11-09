@@ -23,7 +23,8 @@ var (
 )
 
 func init() {
-	config, err := readConfigFromFile("./config.json")
+	var err error
+	config, err = readConfigFromFile("./config.json")
 	if err != nil {
 		panic(err)
 	}

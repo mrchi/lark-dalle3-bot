@@ -26,7 +26,7 @@ func NewCommandDispatcher(
 	commandHelpExecute func(helpMsgs []string, larkeeClient *larkee.LarkClient, messageId string, tanantKey string),
 	commands ...Command,
 ) *CommandDispatcher {
-	dispatcher := CommandDispatcher{larkeeClient: larkeeClient, commandHelpExecute: commandHelpExecute}
+	dispatcher := CommandDispatcher{larkeeClient: larkeeClient, commandHelpExecute: commandHelpExecute, prefixCommandMap: make(map[string]Command)}
 	for _, command := range commands {
 		dispatcher.prefixes = append(dispatcher.prefixes, command.Prefix)
 		dispatcher.helpMsgs = append(dispatcher.helpMsgs, command.HelpMsg)
