@@ -15,6 +15,7 @@ type BotConfig struct {
 	LarkLogLevel          int    `json:"lark_log_level"`
 	LarkEventServerAddr   string `json:"lark_event_server_addr"`
 	IsFeishu              bool   `json:"is_feishu"`
+	GPTAPIKey             string `json:"gpt_api_key"`
 }
 
 func ReadConfigFromFile(filePath string) (*BotConfig, error) {

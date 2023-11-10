@@ -5,12 +5,10 @@ github.com/andybalholm/cascadia v1.3.2 h1:3Xi6Dw5lHF15JtdcmAHD3i1+T8plmv7BQ/nsVi
 github.com/andybalholm/cascadia v1.3.2/go.mod h1:7gtRlve5FxPPgIgX36uWBX58OdBsSS6lUvCFb+h7KvU=
 github.com/larksuite/oapi-sdk-go/v3 v3.0.31 h1:a2TEpdG26Eco3ngIk86bxzEqWrkfZrW11JKDPjyWQ9A=
 github.com/larksuite/oapi-sdk-go/v3 v3.0.31/go.mod h1:F4MLXkfdc/7WAJPLy4lJ0R6VqCxKgqWYS1uYY84p3SI=
-github.com/mrchi/bing-dalle3 v0.0.0-20231105164812-1aa814af3d55 h1:jNBf3ZRsg45cHzIDggWzlhwJnpjVl4+epUPw2u8peys=
-github.com/mrchi/bing-dalle3 v0.0.0-20231105164812-1aa814af3d55/go.mod h1:NqBllUirAdKyTcc5noKBMmkhpwRh11UErT5em1eKoZ0=
-github.com/mrchi/bing-dalle3 v0.0.0-20231107050745-2cd78ffca38c h1:32OKZ4HWg0iJjTieMdUMb6sjJ3ANdKGiTK9J6HldMfU=
-github.com/mrchi/bing-dalle3 v0.0.0-20231107050745-2cd78ffca38c/go.mod h1:NqBllUirAdKyTcc5noKBMmkhpwRh11UErT5em1eKoZ0=
 github.com/mrchi/bing-dalle3 v0.0.0-20231107052543-f8fc5d7a4cfe h1:s7B7fH0Q/WafSpre+3yfPt/JlBBcqqsept61k6s+XEI=
 github.com/mrchi/bing-dalle3 v0.0.0-20231107052543-f8fc5d7a4cfe/go.mod h1:UgEeIiExJhCRPX5zUYbo/19pHjNksX3h+H98KpJBdKo=
+github.com/sashabaranov/go-openai v1.17.5 h1:ItBzlrrfTtkFWOFlgfOhk3y/xRBC4PJol4gdbiK7hgg=
+github.com/sashabaranov/go-openai v1.17.5/go.mod h1:lj5b/K+zjTSFxVLijLSTDZuP7adOgerWeFyZLUhAKRg=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=

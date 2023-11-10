@@ -16,11 +16,13 @@ import (
 	"github.com/mrchi/lark-dalle3-bot/internal/botconfig"
 	cmddispatcher "github.com/mrchi/lark-dalle3-bot/pkg/dispatcher"
 	larkee "github.com/mrchi/lark-dalle3-bot/pkg/larkee"
+	"github.com/sashabaranov/go-openai"
 )
 
 var (
 	config     *botconfig.BotConfig
 	bingClient *bingdalle3.BingDalle3
+	gptClient  *openai.Client
 )
 
 func init() {
@@ -30,6 +32,7 @@ func init() {
 		panic(err)
 	}
 	bingClient = bingdalle3.NewBingDalle3(config.BingCookie)
+	gptClient = openai.NewClient(config.GPTAPIKey)
 }
 
 func main() {
@@ -41,7 +44,7 @@ func main() {
 		larkeeClient = larkee.NewLarkClient(config.LarkAppID, config.LarkAppSecret, larkcore.LogLevel(config.LarkLogLevel))
 		log.Println("Initialize client for Lark")
 	}
-	commandDispatcher := cmddispatcher.NewCommandDispatcher(larkeeClient, commandHelpExecute, commandBalance, commandPrompt)
+	commandDispatcher := cmddispatcher.NewCommandDispatcher(larkeeClient, commandHelpExecute, commandBalance, commandPrompt, commandPromptPro)
 
 	larkEventDispatcher := dispatcher.NewEventDispatcher(config.LarkVerificationToken, config.LarkEventEncryptKey)
 	larkEventDispatcher.OnP2MessageReceiveV1(func(ctx context.Context, event *larkim.P2MessageReceiveV1) error {
