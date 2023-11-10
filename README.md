@@ -41,7 +41,7 @@ This step ensures that the server is reachable when setting up event subscriptio
     - `im:message.group_at_msg:readonly`
     - `im:message.p2p_msg:readonly`
 4. In menu `Event Subscriptions`:
-    1. Enter your bot server's address as the `Request URL`.
+    1. Set `Request URL` with `http(s)://<your domain>:<your port>/dalle3`.
     2. Add the `im.message.receive_v1` event.
     3. Grant these permissions to the new event:
         - `Obtain private messages sent to the bot`

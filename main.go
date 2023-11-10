@@ -56,13 +56,14 @@ func main() {
 	},
 	)
 
+	urlPath := "/dalle3"
 	http.HandleFunc(
-		"/dalle3",
+		urlPath,
 		httpserverext.NewEventHandlerFunc(
 			larkEventDispatcher,
 			larkevent.WithLogLevel(larkcore.LogLevel(config.LarkLogLevel)),
 		),
 	)
-	log.Printf("start server at: %s\n", config.LarkEventServerAddr)
+	log.Printf("Start server at %s, url path is %s\n", config.LarkEventServerAddr, urlPath)
 	http.ListenAndServe(config.LarkEventServerAddr, nil)
 }

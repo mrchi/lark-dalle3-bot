@@ -21,7 +21,7 @@ var commandBalance = dispatcher.Command{
 		} else if balance == 0 {
 			replyMsg = "Tokens are exhausted, generation will take longer and may fail"
 		} else {
-			replyMsg = fmt.Sprintf("There are %d tokens left", balance)
+			replyMsg = fmt.Sprintf("There are %d token(s) left", balance)
 		}
 		larkeeClient.ReplyTextMessage(replyMsg, messageId, tanantKey)
 	},
@@ -53,7 +53,7 @@ var commandPrompt = dispatcher.Command{
 		} else if balance == 0 {
 			balanceMsg = "Tokens are exhausted, generation will take longer and may fail"
 		} else {
-			balanceMsg = fmt.Sprintf("There are %d tokens left", balance)
+			balanceMsg = fmt.Sprintf("There are %d token(s) left", balance)
 		}
 		messages = append(messages, balanceMsg)
 		larkeeClient.ReplyTextMessage(strings.Join(messages, "\n"), messageId, tanantKey)
