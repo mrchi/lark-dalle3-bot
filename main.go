@@ -36,8 +36,10 @@ func main() {
 	var larkeeClient *larkee.LarkClient
 	if config.IsFeishu {
 		larkeeClient = larkee.NewFeishuClient(config.LarkAppID, config.LarkAppSecret, larkcore.LogLevel(config.LarkLogLevel))
+		log.Println("Initialize client for Feishu")
 	} else {
 		larkeeClient = larkee.NewLarkClient(config.LarkAppID, config.LarkAppSecret, larkcore.LogLevel(config.LarkLogLevel))
+		log.Println("Initialize client for Lark")
 	}
 	commandDispatcher := cmddispatcher.NewCommandDispatcher(larkeeClient, commandHelpExecute, commandBalance, commandPrompt)
 

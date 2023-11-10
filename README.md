@@ -23,7 +23,8 @@ To make your bot accessible online, you can leverage services like [ngrok](https
     ```bash
     cp config.example.json config.json
     ```
-3. Execute the program:
+3. (Optional) For Lark users, set config `is_feishu` to `false`.
+4. Execute the program:
     ```bash
     ./lark-dalle3-bot
     ```
