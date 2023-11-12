@@ -111,7 +111,7 @@ var commandPromptPro = dispatcher.Command{
 				Messages: []openai.ChatCompletionMessage{
 					{
 						Role:    openai.ChatMessageRoleUser,
-						Content: fmt.Sprintf("Revise `%s` to a concrete prompt for DALL·E 3", prompt),
+						Content: fmt.Sprintf("Revise `%s` to a concrete DALL·E prompt", prompt),
 					},
 				},
 			},
