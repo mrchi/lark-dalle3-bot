@@ -1,5 +1,6 @@
 {
     "bing_cookie": "",
+    "gpt_api_key": "",
     "lark_verification_token": "",
     "lark_event_encrypt_key": "",
     "lark_app_id": "",
