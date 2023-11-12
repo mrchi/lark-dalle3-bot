@@ -8,6 +8,7 @@ This bot integrates with Feishu/Lark and generates images utilizing the [Image C
 
 - **/balance** Get tokens balance of Bing cookie
 - **/prompt \<Your prompt\>** Create image with prompt
+- **/prompt_pro \<Your prompt\>** Create image with prompt revised by GPT
 
 ## Deployment
 
